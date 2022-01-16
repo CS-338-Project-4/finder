@@ -4,4 +4,5 @@ services:
       context: ./backend
     volumes:
       - ./backend:/app
-    tty: true
+    ports:
+      - "8000:8000"

@@ -5,6 +5,7 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY test.py test.py
+COPY main.py main.py
 
-CMD python test.py
+# TODO: Remove "--reload" for production
+CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0"]
