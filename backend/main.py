@@ -27,6 +27,22 @@ def get_entity(search_str: str):
     return results[0]
 
 
+@app.get('/get-claims/{search_str}')
+def get_claims(search_str: str):
+    """Return the claims of the search string from the MediaWiki API."""
+    entity = get_entity(search_str)['id']
+    response = requests.get(API_URL, params={'action': 'wbgetclaims',
+                                             'entity': entity,
+                                             'format': 'json'})
+    # TODO: Write tests
+    # TODO: Include test for no results
+    results = response.json()['claims']
+    if not results:
+        raise HTTPException(status_code=404, detail='No results found')
+
+    return results
+
+
 @app.get('/get-page/{search_str}')
 def get_page(search_str: str):
     """Return the claims of the search string from the MediaWiki API."""
