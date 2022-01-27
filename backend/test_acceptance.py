@@ -23,19 +23,19 @@ def test2():
 
 
 def test3():
-    types = ['boolean']
+    types = ['truth value']
     answers = ['python', 'water', 'scissors', 'false']
     correct_answer = 'false'
     assert get_best_answer(types, answers) == correct_answer
 
-    
+
 def test4():
     types = ['film director']
     answers = ['Steven Spielberg', 'John Krasinski', 'Jack Black', 'Barack Obama']
     correct_answer = 'Steven Spielberg'
     assert get_best_answer(types, answers) == correct_answer
 
-    
+
 def test5():
     types = ['water deity']
     answers = ['Poseidon', 'Hades', 'Zeus', 'Hera']
@@ -46,5 +46,5 @@ def test5():
 def test6():
     types = ['mythological serpent']
     answers = ['Python', 'kraken', 'Minotaur', 'Giant']
-    correct_answer = 'false'
+    correct_answer = 'Python'
     assert get_best_answer(types, answers) == correct_answer
