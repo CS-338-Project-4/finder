@@ -1,4 +1,7 @@
-def get_best_answer(types: list[str], answers: list[str]) -> str:
+import utils
+
+
+def get_answer(types: list[str], answers: list[str]) -> str:
     """Return answer with highest score."""
     scores = get_scores(types, answers)
     return answers[scores.index(max(scores))]
