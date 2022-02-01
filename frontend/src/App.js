@@ -1,20 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
 import React, {useState} from 'react'
-import get_answer from 'finder'
 function App() {
   const initialValues = {
     data1: "",
     data2: "",
     data3: "",
     data4: "",
+    data5: ""
   };
-
+  
+  const [answer, setAnswer] = useState(null)
   const [print,setPrint] = useState(false)
   //code taken from https://dev.to/deboragaleano/how-to-handle-multiple-inputs-in-react-55el
   export default function Form() {
     const [values, setValues] = useState(initialValues);
-    const [print, setPrint] = useState(false);
     const handleInputChange = (e) => {
       const { name, value } = e.target;
       setValues({
@@ -22,16 +22,18 @@ function App() {
         [name]: value,
       });
     };
+    setPrint(false);
   }
   
   function run_answer() {
-    get_answer(initialValues)
+    window.fetch('http://localhost:8000/get-answers?types=programming%20language&answers=python&answers=apple').then(answer => {setAnswer(answer);});
+    setPrint(true);
   }
   return (
     <div className="App">
       {
         print?
-        <h1>Get Input box value !</h1>
+        <h1>{answer}</h1>
         :null
       }
       <form>
@@ -39,11 +41,12 @@ function App() {
         <input type="text" name = "data2" value = {values.data2} onChange={handleInputChange}/>
         <input type="text" name = "data3" value = {values.data3} onChange={handleInputChange}/>
         <input type="text" name = "data4" value = {values.data4} onChange={handleInputChange}/>
+        <input type="text" name = "data5" value = {values.data4} onChange={handleInputChange}/>
 
       </form>
-
-
       <button onClick={()=>run_answer()} >Submit</button>
+
+
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
