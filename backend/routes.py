@@ -42,6 +42,12 @@ def get_scores(types: list[str] = Query([]), answers: list[str] = Query([])):
 def get_answer(types: list[str] = Query([]), answers: list[str] = Query([])):
     return finder.get_answer(types, answers)
 
+
 @router.get('/get-answer-human')
 def get_answer_human(types: list[str] = Query([]), answers: list[str] = Query([])):
     return finder.human_search(types, answers)
+
+
+@router.get('/get-sparql')
+def get_sparql(types: list[str] = Query([]), answers: list[str] = Query([])):
+    return finder.get_sparql(types, answers)

@@ -34,6 +34,11 @@ def get_scores(types: list[str], answers: list[str]) -> list[int]:
 
     return scores
 
+
+def get_sparql(types: list[str], answers: list[str])-> str:
+    raise NotImplementedError
+
+
 def human_search(types: list[str], answers: list[str])-> str:
     if not (types and answers):
         raise ValueError
@@ -67,16 +72,16 @@ def human_search(types: list[str], answers: list[str])-> str:
             # elif relation == 'P31': #instance
             #     #next_instance = entities
             #     claims = utils.get_claims(entities[0])
-        
+
         # entities_id = utils.get_ids(claims.values())
         # claims = utils.get_claims(entities_id)
-    
+
     for i, answer in enumerate(answers): #for each answer in the list
         claims = utils.get_claims(answer) #get the dictionary for answer
         if claims.get(type) is not None: #see if the type is in the dictionary
             entity_ids = get_claim_ids(claims[type]) #get the qNumbers for the entities in type
             print(entity_ids)
-            for x in entity_ids: 
+            for x in entity_ids:
                 if x == type_ids[0]: #check if answer type is in entity_ids
                     scores[i] += 0
                     print(x, type_ids[0])
