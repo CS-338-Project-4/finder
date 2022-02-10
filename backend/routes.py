@@ -41,3 +41,7 @@ def get_scores(types: list[str] = Query([]), answers: list[str] = Query([])):
 @router.get('/get-answer')
 def get_answer(types: list[str] = Query([]), answers: list[str] = Query([])):
     return finder.get_answer(types, answers)
+
+@router.get('/get-answer-human')
+def get_answer_human(types: list[str] = Query([]), answers: list[str] = Query([])):
+    return finder.human_search(types, answers)
