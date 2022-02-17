@@ -20,7 +20,22 @@ function App() {
     return response.json()
   };
 
+  async function getScores() {
+    const apiUrl = 'http://localhost:8000/get-sparql?';
+    let searchParams = new URLSearchParams();
+    // TODO: append types and answers to searchParams
+    searchParams.append('types', 'programming language');
+    searchParams.append('types', 'scripting language');
+    searchParams.append('answers', 'java');
+    searchParams.append('answers', 'python');
+    searchParams.append('answers', 'false');
+
+    const response = await fetch(apiUrl + searchParams.toString());
+    return response.json()
+  };
+
   console.log(getPossibleNodes());
+  console.log(getScores());
 
   return (
 
