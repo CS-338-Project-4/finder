@@ -1,9 +1,13 @@
 import utils
+import sys
+from itertools import product
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 def get_answer(types: list[str], answers: list[str]) -> str:
     """Return answer with highest score."""
-    scores = get_scores(types, answers)
+    # scores = get_scores(types, answers)
+    scores = get_sparql(types, answers)
     return answers[scores.index(max(scores))]
 
 
@@ -33,10 +37,6 @@ def get_scores(types: list[str], answers: list[str]) -> list[int]:
             scores[i] += sum(x in entity_ids for x in type_ids)
 
     return scores
-
-
-def get_sparql(types: list[str], answers: list[str])-> str:
-    raise NotImplementedError
 
 
 def human_search(types: list[str], answers: list[str])-> str:
@@ -127,3 +127,50 @@ def get_claim_ids(entities: dict) -> list['str']:
             pass
 
     return entity_ids
+
+
+def get_sparql(types: list[str], answers: list[str]) -> list[int]:
+    endpoint_url = "https://query.wikidata.org/sparql"
+
+    scores = [0] * len(answers)
+    type_ids = utils.get_ids(types)
+    answer_ids = utils.get_ids(answers)
+
+    def get_results(endpoint_url, query):
+        user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+        # TODO adjust user agent; see https://w.wiki/CX6
+        sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+        sparql.setQuery(query)
+        sparql.setReturnFormat(JSON)
+        return sparql.query().convert()
+
+    for i, answer_id in enumerate(answer_ids):
+        for type_id in type_ids:
+            relation_query = (
+                'SELECT ?relationItem ?relationItemLabel (count (*) as ?count)'
+                'WHERE {'
+                f'?answer ?relation wd:{type_id} .'
+                '?relationItem wikibase:directClaim ?relation .'
+                f'?answer wdt:P31?/wdt:P279* wd:{answer_id} .'
+                'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }'
+                '} group by ?relationItem ?relationItemLabel order by desc(?count)'
+            )
+
+            results = get_results(endpoint_url, relation_query)['results']['bindings']
+            if results:
+                scores[i] += int(results[0]['count']['value'])
+
+            tree_query = (
+                'SELECT ?item ?itemLabel'
+                'WHERE {'
+                f'wd:{answer_id} (p:P31|p:P279) ?st .'
+                '?st (ps:P31|ps:P279) ?item .'
+                f'?item wdt:P31?/wdt:P279* wd:{type_id} .'
+                'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }'
+                '}'
+            )
+
+            results = get_results(endpoint_url, tree_query)['results']['bindings']
+            scores[i] += len(results)
+
+    return scores
