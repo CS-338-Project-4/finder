@@ -5,6 +5,23 @@ import "./index.css";
 import Title from './Title';
 
 function App() {
+  async function getPossibleNodes() {
+    const apiUrl = 'https://www.wikidata.org/w/api.php?';
+    let params = {
+      action: 'wbsearchentities',
+      search: 'python',  // TODO: get from state of question type input
+      language: 'en',
+      format: 'json',
+      origin: '*'
+    };
+    let searchParams = new URLSearchParams(params);
+
+    const response = await fetch(apiUrl + searchParams.toString());
+    return response.json()
+  };
+
+  console.log(getPossibleNodes());
+
   return (
 
   <div className="form-container">
