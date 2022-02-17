@@ -6,34 +6,34 @@ import Title from './Title';
 
 function App() {
   return (
-    
-  <div class="form-container">
-    
-      <form class="register-form">
+
+  <div className="form-container">
+
+      <form className="register-form">
 
       <Title />
-        
+
         <input
           id="question"
-          class="form-field"
+          className="form-field"
           type="text"
           placeholder="Question"
           name="question"
         />
-        
-        <button class="form-field" type="submit">
+
+        <button className="form-field" type="submit">
           Option - 1
         </button>
 
-        <button class="form-field" type="submit">
-          Option - 2 
+        <button className="form-field" type="submit">
+          Option - 2
         </button>
 
-        <button class="form-field" type="submit">
+        <button className="form-field" type="submit">
           Option - 3
         </button>
 
-        <button class="form-field" type="submit">
+        <button className="form-field" type="submit">
           Option - 4
         </button>
 
