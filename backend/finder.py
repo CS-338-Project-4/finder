@@ -163,8 +163,8 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
             tree_query = (
                 'SELECT ?item ?itemLabel'
                 'WHERE {'
-                f'wd:{answer_id} (p:P31|p:P279) ?st .'
-                '?st (ps:P31|ps:P279) ?item .'
+                f'wd:{answer_id} (p:P31?|p:P279) ?st .'
+                '?st (ps:P31?|ps:P279) ?item .'
                 f'?item wdt:P31?/wdt:P279* wd:{type_id} .'
                 'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }'
                 '}'
