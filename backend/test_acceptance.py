@@ -46,6 +46,38 @@ def test5():
 
 def test6():
     types = ['mythological serpent']
-    answers = ['kraken', 'Minotaur', 'Giant', 'Python']
-    correct_answer = 'Python'
+    answers = ['kraken', 'Minotaur', 'Giant', 'Q15721']
+    correct_answer = 'Q15721'
+    assert get_answer(types, answers) == correct_answer
+
+
+def test7():
+    """Test two answers."""
+    types = ['programming language']
+    answers = ['python', 'water']
+    correct_answer = 'python'
+    assert get_answer(types, answers) == correct_answer
+
+
+def test8():
+    """Test two types."""
+    types = ['programming language', 'scripting language']
+    answers = ['java', 'python', 'false']
+    correct_answer = 'python'
+    assert get_answer(types, answers) == correct_answer
+
+
+def test9():
+    """Test searching unique IDs."""
+    types = ['business']
+    answers = ['Q89', 'Q312']
+    correct_answer = 'Q312'
+    assert get_answer(types, answers) == correct_answer
+
+
+def test10():
+    """Test searching unique IDs."""
+    types = ['enterprise', 'business', 'fruit']
+    answers = ['Q89', 'Q312']
+    correct_answer = 'Q312'
     assert get_answer(types, answers) == correct_answer
