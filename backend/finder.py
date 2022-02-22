@@ -158,7 +158,20 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
 
             results = get_results(endpoint_url, relation_query)['results']['bindings']
             if results:
-                scores[i] += int(results[0]['count']['value'])
+                label = results[0]['relationItemLabel']['value']
+                label_id = utils.get_ids(label)
+                claims = utils.get_claims(answer_id)[0]
+                if claims.get(label_id) is not None: #see if the type is in the dictionary
+                    entity_ids = get_claim_ids(claims[label_id]) #get the qNumbers for the entities in type
+                    print(entity_ids)
+                    for x in entity_ids:
+                        if x == type_ids[0]: #check if answer type is in entity_ids
+                            scores[i] += 1
+                            print(x, type_ids[0])
+                            break
+                        else:
+                            scores[i] -= -1
+                            print(x, type_ids[0])
 
             tree_query = (
                 'SELECT ?item ?itemLabel'
