@@ -100,26 +100,38 @@ function App() {
   return (
     <div className="form-container">
       <Title />
+
+      <input
+          id="answertype"
+          className="form-field"
+          type="text"
+          placeholder="Expected Answer Type"
+          name="answertype"
+        />
+
       {inputList.map((x, i) => {
         return (
+
           <div className="form-field">
+
             <input
               name="firstName"
-              placeholder="Enter First Name"
+              placeholder="Enter a option"
               value={x.firstName}
               onChange={e => handleInputChange(e, i)}
             />
             
-            <div className="form-container">
+            
               {inputList.length !== 1 && <button
-                className="form-field"
+                className="button submit"
                 onClick={() => handleRemoveClick(i)}>Remove</button>}
               {inputList.length - 1 === i && <button onClick={handleAddClick}>Add</button>}
-            </div>
+            
           </div>
         );
       })}
-      <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div>
+      <button className="button submit" type="submit">Submit</button>
+      
     </div>
   );
 
