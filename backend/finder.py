@@ -155,23 +155,22 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                 'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }'
                 '} group by ?relationItem ?relationItemLabel order by desc(?count)'
             )
-
             results = get_results(endpoint_url, relation_query)['results']['bindings']
             if results:
-                label = results[0]['relationItemLabel']['value']
-                label_id = utils.get_ids(label)
-                claims = utils.get_claims(answer_id)[0]
+                label = results[0]['relationItem']['value']
+                label_id = label.split('/')[-1]
+                claims = utils.get_claims(answer_id)
                 if claims.get(label_id) is not None: #see if the type is in the dictionary
                     entity_ids = get_claim_ids(claims[label_id]) #get the qNumbers for the entities in type
-                    print(entity_ids)
+                    scores[i] += 1
+                    length = len(entity_ids)
+                    go_next = True
                     for x in entity_ids:
                         if x == type_ids[0]: #check if answer type is in entity_ids
-                            scores[i] += 1
-                            print(x, type_ids[0])
-                            break
-                        else:
-                            scores[i] -= -1
-                            print(x, type_ids[0])
+                            scores[i] += 0
+                            go_next = False
+                        elif go_next:
+                            scores[i] -= round(1/length, 2)
 
             tree_query = (
                 'SELECT ?item ?itemLabel'
