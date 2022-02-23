@@ -3,23 +3,9 @@ import logo from './logo.svg';
 import { useState } from 'react';
 import "./index.css";
 import Title from './Title';
+import Autocomplete from './Autocomplete';
 
 function App() {
-  async function getPossibleNodes() {
-    const apiUrl = 'https://www.wikidata.org/w/api.php?';
-    let params = {
-      action: 'wbsearchentities',
-      search: 'python',  // TODO: get from state of question type input
-      language: 'en',
-      format: 'json',
-      origin: '*'
-    };
-    let searchParams = new URLSearchParams(params);
-
-    const response = await fetch(apiUrl + searchParams.toString());
-    return response.json()
-  };
-
   async function getScores() {
     const apiUrl = 'http://localhost:8000/get-sparql?';
     let searchParams = new URLSearchParams();
@@ -34,7 +20,6 @@ function App() {
     return response.json()
   };
 
-  console.log(getPossibleNodes());
   console.log(getScores());
 
   /* return (
@@ -100,26 +85,40 @@ function App() {
   return (
     <div className="form-container">
       <Title />
+
+      <Autocomplete />
+
+      <input
+          id="answertype"
+          className="form-field"
+          type="text"
+          placeholder="Expected Answer Type"
+          name="answertype"
+        />
+
       {inputList.map((x, i) => {
         return (
+
           <div className="form-field">
+
             <input
               name="firstName"
-              placeholder="Enter First Name"
+              placeholder="Enter a option"
               value={x.firstName}
               onChange={e => handleInputChange(e, i)}
             />
-            
-            <div className="form-container">
+
+
               {inputList.length !== 1 && <button
-                className="form-field"
+                className="button submit"
                 onClick={() => handleRemoveClick(i)}>Remove</button>}
               {inputList.length - 1 === i && <button onClick={handleAddClick}>Add</button>}
-            </div>
+
           </div>
         );
       })}
-      <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div>
+      <button className="button submit" type="submit">Submit</button>
+
     </div>
   );
 
