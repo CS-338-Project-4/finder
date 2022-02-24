@@ -147,17 +147,19 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     for i, answer_id in enumerate(answer_ids):
         for type_id in type_ids:
             relation_query = (
-                'SELECT ?relationItem ?relationItemLabel (count (*) as ?count)'
+                'SELECT ?relationP ?relationPLabel (count (*) as ?count)'
                 'WHERE {'
-                f'?answer ?relation wd:{type_id} .'
-                '?relationItem wikibase:directClaim ?relation .'
-                f'?answer wdt:P31?/wdt:P279* wd:{answer_id} .'
+                f'?answerDescendant wdt:P31?/wdt:P279* wd:{answer_id} .'
+                '?answerDescendant ?relationP ?statement.'
+                f'?statement ?relationPS wd:{type_id} .'
+                'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) .'
                 'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }'
-                '} group by ?relationItem ?relationItemLabel order by desc(?count)'
+                '} group by ?relationP ?relationPLabel order by desc(?count)'
             )
             results = get_results(endpoint_url, relation_query)['results']['bindings']
             if results:
-                label = results[0]['relationItem']['value']
+                print(results)
+                label = results[0]['relationP']['value']
                 label_id = label.split('/')[-1]
                 claims = utils.get_claims(answer_id)
                 if claims.get(label_id) is not None: #see if the type is in the dictionary
