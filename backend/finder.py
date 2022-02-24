@@ -158,7 +158,6 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
             )
             results = get_results(endpoint_url, relation_query)['results']['bindings']
             if results:
-                print(results)
                 label = results[0]['relationP']['value']
                 label_id = label.split('/')[-1]
                 claims = utils.get_claims(answer_id)
@@ -168,7 +167,7 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                     length = len(entity_ids)
                     go_next = True
                     for x in entity_ids:
-                        if x == type_ids[0]: #check if answer type is in entity_ids
+                        if x == type_id: #check if answer type is in entity_ids
                             scores[i] += 0
                             go_next = False
                         elif go_next:
