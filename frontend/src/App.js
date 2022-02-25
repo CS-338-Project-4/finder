@@ -9,122 +9,80 @@ function App() {
   async function getScores() {
     const apiUrl = 'http://localhost:8000/get-sparql?';
     let searchParams = new URLSearchParams();
-    // TODO: append types and answers to searchParams
-    searchParams.append('types', 'programming language');
-    searchParams.append('types', 'scripting language');
-    searchParams.append('answers', 'java');
-    searchParams.append('answers', 'python');
-    searchParams.append('answers', 'false');
+
+    typeList.forEach(type => {
+      searchParams.append('types', type);
+    });
+
+    answerList.forEach(answer => {
+      searchParams.append('answers', answer);
+    });
 
     const response = await fetch(apiUrl + searchParams.toString());
     return response.json()
   };
 
-  console.log(getScores());
-
-  /* return (
-
-  <div className="form-container">
-
-      <form className="register-form">
-
-      <Title />
-
-        <input
-          id="question"
-          className="form-field"
-          type="text"
-          placeholder="Question"
-          name="question"
-        />
-
-        <button className="form-field" type="submit">
-          Option - 1
-        </button>
-
-        <button className="form-field" type="submit">
-          Option - 2
-        </button>
-
-        <button className="form-field" type="submit">
-          Option - 3
-        </button>
-
-        <button className="form-field" type="submit">
-          Option - 4
-        </button>
-
-
-
-      </form>
-    </div>
-  ); */
-
-  const [inputList, setInputList] = useState([{ options: "" }]);
+  const [typeList, setTypeList] = useState(['']);
+  const [answerList, setAnswerList] = useState(['']);
+  const [scoresList, setscoresList] = useState([]);
 
   // handle input change
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...inputList];
-    list[index][name] = value;
-    setInputList(list);
+  const handleInputChange = (newValue, index, currList, setFunction) => {
+    // const { name, value } = e.target;
+    let list = [...currList];
+    list[index] = newValue;
+    setFunction(list);
   };
 
   // handle click event of the Remove button
-  const handleRemoveClick = index => {
-    const list = [...inputList];
+  const handleRemoveClick = (index, currList, setFunction) => {
+    let list = [...currList];
     list.splice(index, 1);
-    setInputList(list);
+    setFunction(list);
   };
 
   // handle click event of the Add button
-  const handleAddClick = () => {
-    setInputList([...inputList, { options: "" }]);
+  const handleAddClick = (currList, setFunction) => {
+    setFunction([...currList, '']);
   };
 
   return (
     <div className="form-container">
       <Title />
 
-      <Autocomplete />
+      <h2>Answer Types</h2>
+      {typeList.map((x, i) => (
+        <div className="form-field">
+          <Autocomplete
+            input={x}
+            setInput={val => handleInputChange(val, i, typeList, setTypeList)}
+          />
 
-      <input
-          id="answertype"
-          className="form-field"
-          type="text"
-          placeholder="Expected Answer Type"
-          name="answertype"
-        />
+          {typeList.length !== 1 && <button
+          className="button submit"
+          onClick={() => handleRemoveClick(i, typeList, setTypeList)}>Remove</button>}
+          {typeList.length - 1 === i && <button onClick={() => handleAddClick(typeList, setTypeList)}>Add</button>}
+        </div>
+      ))}
 
-      {inputList.map((x, i) => {
-        return (
+      <h2>Answers</h2>
+      {answerList.map((x, i) => (
+        <div className="form-field">
+          <Autocomplete
+            input={x}
+            setInput={val => handleInputChange(val, i, answerList, setAnswerList)}
+          />
 
-          <div className="form-field">
-
-            <input
-              name="firstName"
-              placeholder="Enter a option"
-              value={x.firstName}
-              onChange={e => handleInputChange(e, i)}
-            />
-
-
-              {inputList.length !== 1 && <button
-                className="button submit"
-                onClick={() => handleRemoveClick(i)}>Remove</button>}
-              {inputList.length - 1 === i && <button onClick={handleAddClick}>Add</button>}
-
-          </div>
-        );
-      })}
-      <button className="button submit" type="submit">Submit</button>
+          {answerList.length !== 1 && <button
+          className="button submit"
+          onClick={() => handleRemoveClick(i, answerList, setAnswerList)}>Remove</button>}
+          {answerList.length - 1 === i && <button onClick={() => handleAddClick(answerList, setAnswerList)}>Add</button>}
+        </div>
+      ))}
+      <button className="button submit" type="submit" onClick={() => console.log(getScores())}>Submit</button>
 
     </div>
   );
-
-
-
-
 }
 
 export default App;
