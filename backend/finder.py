@@ -137,8 +137,7 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     answer_ids = utils.get_ids(answers)
 
     def get_results(endpoint_url, query):
-        user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
-        # TODO adjust user agent; see https://w.wiki/CX6
+        user_agent = 'Finder/0.0 <darrylforbes2022@u.northwestern.edu>'
         sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
         sparql.setQuery(query)
         sparql.setReturnFormat(JSON)
@@ -147,38 +146,40 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     for i, answer_id in enumerate(answer_ids):
         for type_id in type_ids:
             relation_query = (
-                'SELECT ?relationItem ?relationItemLabel (count (*) as ?count)'
+                'SELECT ?relationP (count (*) as ?count)'
                 'WHERE {'
-                f'?answer ?relation wd:{type_id} .'
-                '?relationItem wikibase:directClaim ?relation .'
-                f'?answer wdt:P31?/wdt:P279* wd:{answer_id} .'
-                'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }'
-                '} group by ?relationItem ?relationItemLabel order by desc(?count)'
+                f'?answerDescendant wdt:P31?/wdt:P279* wd:{answer_id} .'
+                '?answerDescendant ?relationP ?statement.'
+                f'?statement ?relationPS wd:{type_id} .'
+                'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) .'
+                '} group by ?relationP order by desc(?count)'
             )
             results = get_results(endpoint_url, relation_query)['results']['bindings']
             if results:
-                label = results[0]['relationItem']['value']
-                label_id = label.split('/')[-1]
+                label_id = results[0]['relationP']['value'].split('/')[-1]
                 claims = utils.get_claims(answer_id)
-                if claims.get(label_id) is not None: #see if the type is in the dictionary
-                    entity_ids = get_claim_ids(claims[label_id]) #get the qNumbers for the entities in type
+                if claims.get(label_id):  # See if the type is in the dictionary
+                    entity_ids = get_claim_ids(claims[label_id])  # Get the qNumbers for the entities in type
                     scores[i] += 1
-                    length = len(entity_ids)
-                    go_next = True
-                    for x in entity_ids:
-                        if x == type_ids[0]: #check if answer type is in entity_ids
+                    for entity in entity_ids:
+                        descendant_query = (
+                            'SELECT *'
+                            'WHERE {'
+                            f'wd:{entity} wdt:P31?/wdt:P279* wd:{type_id} .'
+                            '}'
+                        )
+                        results = get_results(endpoint_url, descendant_query)['results']['bindings']
+                        if results:
                             scores[i] += 0
-                            go_next = False
-                        elif go_next:
-                            scores[i] -= round(1/length, 2)
+                            break
+                        scores[i] -= round(1/len(entity_ids), 2)
 
             tree_query = (
-                'SELECT ?item ?itemLabel'
+                'SELECT ?item'
                 'WHERE {'
                 f'wd:{answer_id} (p:P31?|p:P279) ?st .'
                 '?st (ps:P31?|ps:P279) ?item .'
                 f'?item wdt:P31?/wdt:P279* wd:{type_id} .'
-                'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }'
                 '}'
             )
 

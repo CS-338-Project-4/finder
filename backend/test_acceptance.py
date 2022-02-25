@@ -81,3 +81,19 @@ def test10():
     answers = ['Q89', 'Q312']
     correct_answer = 'Q312'
     assert get_answer(types, answers) == correct_answer
+
+
+def test11():
+    """Test ranking issue in relation query (Tom Cruise bug)."""
+    types = ['actor']
+    answers = ['Steven Spielberg', 'Tom Cruise']
+    correct_answer = 'Tom Cruise'
+    assert get_answer(types, answers) == correct_answer
+
+
+def test12():
+    """Test discovered bug in relation query score calculation."""
+    types = ['lawyer', 'film director', 'film producer', 'actor']
+    answers = ['Barack Obama', 'Steven Spielberg']
+    correct_answer = 'Steven Spielberg'
+    assert get_answer(types, answers) == correct_answer
