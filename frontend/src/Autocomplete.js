@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 
-const Autocomplete = () => {
-  const [input, setInput] = useState('');
+const Autocomplete = ({ input, setInput }) => {
   const [suggestions, setSuggestions] = useState([]);
 
   const getSuggestions = async ({ value }) => {
@@ -31,7 +30,6 @@ const Autocomplete = () => {
 
   return (
     <div>
-      <h1>Test autocomplete</h1>
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={getSuggestions}
