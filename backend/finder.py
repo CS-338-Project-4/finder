@@ -201,6 +201,8 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     claims = utils.get_claims(type_ids)
     animal_types = ['Q7377', 'Q152', 'Q5113', 'Q10908', 'Q1390', 'Q10811']
     animal_names = ['mammal', 'insect', 'fish', 'bird', 'amphibian', 'reptile']
+    types = utils.get_entity(type_ids[0])['label']
+    print(types)
     #get dictionary of data for AnswerType
     if type_ids[0] == 'Q729':
         for i, answer in enumerate(answers): #for each answer in the list
@@ -216,6 +218,6 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
             strings = claims['description'].split()
             print(strings)
             for j in strings:
-                if j == types[0]:
+                if j == types:
                     scores[i] += 1
     return scores
