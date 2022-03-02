@@ -118,49 +118,56 @@ def test14():
 #     correct_answer = 'Q11424'
 #     assert get_answer(types, answers) == correct_answer
 
-def test16():
+# def test16(): TIMEOUT ERROR
+#     """Second test searching same type as answer."""
+#     types = ['human']
+#     answers = ['human', 'fashion']
+#     correct_answer = 'human'
+#     assert get_answer(types, answers) == correct_answer
+
+def test17():
     """Test searching one answer."""
     types = ['Q1075']
     answers = ['Q3142']
     correct_answer = 'Q3142'
     assert get_answer(types, answers) == correct_answer
 
-def test17():
+def test18():
     """Test searching multiple of the same answer."""
     types = ['color']
     answers = ['orange', 'orange']
     correct_answer = 'orange'
     assert get_answer(types, answers) == correct_answer
 
-def test18():
+def test19():
     """Normal test for type: film."""
     types = ['Q11424', 'Q16144339']
     answers = ['Q283', 'Q1420', 'Q26698156']
     correct_answer = 'Q26698156'
     assert get_answer(types, answers) == correct_answer
 
-# def test19(): CAR IS CHOSEN FOR TYPE ANIMAL
+# def test20(): CAR IS CHOSEN FOR TYPE ANIMAL
 #     """Normal test for type: animal."""
 #     types = ['animal']
 #     answers = ['car', 'tiger', 'Q22676']
 #     correct_answer = 'tiger'
 #     assert get_answer(types, answers) == correct_answer
 
-def test20():
+def test21():
     """Second test for animal type with car as possible answer."""
     types = ['animal']
     answers = ['car', 'elephant', 'building']
     correct_answer = 'elephant'
     assert get_answer(types, answers) == correct_answer
 
-def test21():
+def test22():
     """Normal test for type: animal."""
     types = ['animal']
     answers = ['lion', 'toy', 'building']
     correct_answer = 'lion'
     assert get_answer(types, answers) == correct_answer
 
-def test22():
+def test23():
    """Normal test for type: mammal."""
    types = ['mammal']
    answers = ['car', 'tiger', 'toy']
