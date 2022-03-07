@@ -173,3 +173,73 @@ def test23():
    answers = ['car', 'tiger', 'toy']
    correct_answer = 'tiger'
    assert get_answer(types, answers) == correct_answer
+
+def test24():
+    """Normal test searching human / country of citizenship"""
+    types = ['human', 'Q30']
+    answers = ['Q8877', 'Q9673', 'Q1426', 'Q8991894']
+    correct_answer = 'Q8877'
+    assert get_answer(types, answers) == correct_answer
+
+def test25():
+    """Normal test searching human"""
+    types = ['human']
+    answers = ['Q8877', 'tiger', 'car', 'ball']
+    correct_answer = 'Q8877'
+    assert get_answer(types, answers) == correct_answer
+
+def test26():
+    """Normal test searching human / language spoken"""
+    types = ['human', 'Q36510']
+    answers = ['Q8877', 'Q9673', 'Q1426', 'Q8991894']
+    correct_answer = 'Q8991894'
+    assert get_answer(types, answers) == correct_answer
+
+def test27():
+    """Normal test searching human / occupation"""
+    types = ['Q10833314']
+    answers = ['Q1426', 'Q36159', 'Q9673', 'tiger']
+    correct_answer = 'Q1426'
+    assert get_answer(types, answers) == correct_answer
+
+def test28():
+    """Normal test searching actor / film"""
+    types = ['Q160071']
+    answers = ['Q36767', 'Q13909', 'Q35332', 'Q3772']
+    correct_answer = 'Q36767'
+    assert get_answer(types, answers) == correct_answer
+
+def test29():
+    """Normal test searching human / president"""
+    types = ['Q11696']
+    answers = ['Q22686', 'Q36767', 'Q1426']
+    correct_answer = 'Q22686'
+    assert get_answer(types, answers) == correct_answer
+
+def test30():
+    """Normal test searching human / given name"""
+    types = ['Q4925477']
+    answers = ['Q44437', 'Q155700', 'Q313107']
+    correct_answer = 'Q44437'
+    assert get_answer(types, answers) == correct_answer
+
+def test31():
+    """Normal test searching human / billionaire"""
+    types = ['Q1062083']
+    answers = ['Q590212', 'Q1426', 'Q9673']
+    correct_answer = 'Q590212'
+    assert get_answer(types, answers) == correct_answer
+
+def test32():
+    """Normal test searching human (sex, first name, baseball team)"""
+    types = ['human', 'male', 'Q18057751', 'Q5369']
+    answers = ['Q448005', 'Q1176561', 'Q2852937', 'Q188792']
+    correct_answer = 'Q448005'
+    assert get_answer(types, answers) == correct_answer
+
+def test33():
+    """Normal test searching human (education, female)"""
+    types = ['Q309350', 'Q6581072']
+    answers = ['Q16147452', 'Q194280', 'Q6294']
+    correct_answer = 'Q16147452'
+    assert get_answer(types, answers) == correct_answer
