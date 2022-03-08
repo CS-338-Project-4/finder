@@ -104,10 +104,10 @@ function App() {
       <button className="button submit" type="submit" onClick={() => getScores()}>Submit</button>
      
      { scoresList.length > 0 ? <div>
-        <h2>Results</h2>
+        <h2>Accuracy Scores</h2>
             {console.log(scoresList.length)}
             <ul>
-              {scoresList.map((s, i) => <li key={i} >{answerList[i]}, {s}</li>)}
+              {scoresList.map((s, i) => <li key={i} >{answerList[i]}: {s}</li>)}
             </ul>
       </div> : null}
       
