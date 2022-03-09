@@ -157,59 +157,53 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
 
     for i, answer_id in enumerate(answer_ids):
         for type_id in type_ids:
+            print(answer_id)
             relation_query = (
-                'SELECT ?relationP (count (*) as ?count)'
-                'WHERE {'
-                f'?answerDescendant wdt:P31?/wdt:P279* wd:{answer_id} .'
-                '?answerDescendant ?relationP ?statement.'
-                f'?statement ?relationPS wd:{type_id} .'
-                'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) .'
-                '} group by ?relationP order by desc(?count)'
+                'SELECT ?item ?relationP '
+                'WHERE { '
+                f'wd:{answer_id} (p:P31?|p:P279|p:P21|p:P27|p:P106|p:P361|p:P1412) ?st . '
+                f'wd:{answer_id} ?relationP ?st . '
+                '?st ?relationPS ?item . '
+                '?st (ps:P31?|ps:P279|ps:P21|ps:P27|ps:P106|ps:P361|ps:P1412) ?item . '
+                f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
+                'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) . '
+                '} group by ?item ?relationP '
             )
+
             results = get_results(endpoint_url, relation_query)['results']['bindings']
-            print(results)
             if results:
                 label_id = results[0]['relationP']['value'].split('/')[-1]
+                items = {r['item']['value'].split('/')[-1] for r in results}
                 claims = utils.get_claims(answer_id)
                 if claims.get(label_id):  # See if the type is in the dictionary
                     entity_ids = get_claim_ids(claims[label_id])  # Get the qNumbers for the entities in type
                     scores[i] += 1
                     for entity in entity_ids:
-                        descendant_query = (
-                            'SELECT *'
-                            'WHERE {'
-                            f'wd:{entity} wdt:P31?/wdt:P279* wd:{type_id} .'
-                            '}'
-                        )
-                        results = get_results(endpoint_url, descendant_query)['results']['bindings']
-                        if results:
+                        if entity in items:
                             scores[i] += 0
                             break
                         scores[i] -= round(1/len(entity_ids), 2)
 
-            tree_query = (
-                'SELECT ?item '
-                'WHERE { '
-                f'wd:{answer_id} (p:P31?|p:P279|p:P21|p:P106|p:P361) ?st . '
-                '?st (ps:P31?|ps:P279|ps:P21|ps:P106|ps:P361) ?item . '
-                f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
-                '} group by ?item'
-            )
+            # tree_query = (
+            #     'SELECT ?item '
+            #     'WHERE { '
+            #     f'wd:{answer_id} (p:P31?|p:P279|p:P21|p:P106|p:P361) ?st . '
+            #     '?st (ps:P31?|ps:P279|ps:P21|ps:P106|ps:P361) ?item . '
+            #     f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
+            #     '} group by ?item'
+            # )
 
-            results = get_results(endpoint_url, tree_query)['results']['bindings']
-            scores[i] += len(results)
+            # results = get_results(endpoint_url, tree_query)['results']['bindings']
+            # scores[i] += len(results)
 
     claims = utils.get_claims(type_ids)
     animal_types = ['Q7377', 'Q152', 'Q5113', 'Q10908', 'Q1390', 'Q10811']
     animal_names = ['mammal', 'insect', 'fish', 'bird', 'amphibian', 'reptile']
     types = utils.get_entity(type_ids[0])['label']
-    print(types)
     #get dictionary of data for AnswerType
     if type_ids[0] == 'Q729':
         for i, answer in enumerate(answers): #for each answer in the list
-            print(answer)
             claims = utils.get_claims(answer)
-            print(claims.get('P1417'))
 
             if claims.get('P1417') is not None:
                 scores[i] += 1
@@ -217,8 +211,8 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
         for i, answer in enumerate(answers): #for each answer in the list
             claims = utils.get_entity(answer)
             strings = claims['description'].split()
-            print(strings)
             for j in strings:
                 if j == types:
                     scores[i] += 1
+    print(scores)
     return scores
