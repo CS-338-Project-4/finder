@@ -111,19 +111,19 @@ def test14():
     correct_answer = 'Q212064'
     assert get_answer(types, answers) == correct_answer
 
-# def test15(): TIMEOUT ERROR
-#     """Test searching same type / answer."""
-#     types = ['Q11424']
-#     answers = ['Q11424', 'Q1420']
-#     correct_answer = 'Q11424'
-#     assert get_answer(types, answers) == correct_answer
+def test15():
+    """Test searching same type / answer."""
+    types = ['Q11424']
+    answers = ['Q11424', 'Q1420']
+    correct_answer = 'Q11424'
+    assert get_answer(types, answers) == correct_answer
 
-# def test16(): TIMEOUT ERROR
-#     """Second test searching same type as answer."""
-#     types = ['human']
-#     answers = ['human', 'fashion']
-#     correct_answer = 'human'
-#     assert get_answer(types, answers) == correct_answer
+def test16():
+    """Second test searching same type as answer."""
+    types = ['human']
+    answers = ['human', 'fashion']
+    correct_answer = 'human'
+    assert get_answer(types, answers) == correct_answer
 
 def test17():
     """Test searching one answer."""
@@ -146,12 +146,12 @@ def test19():
     correct_answer = 'Q26698156'
     assert get_answer(types, answers) == correct_answer
 
-# def test20(): CAR IS CHOSEN FOR TYPE ANIMAL
-#     """Normal test for type: animal."""
-#     types = ['animal']
-#     answers = ['car', 'tiger', 'Q22676']
-#     correct_answer = 'tiger'
-#     assert get_answer(types, answers) == correct_answer
+def test20():
+    """Normal test for type: animal."""
+    types = ['animal']
+    answers = ['car', 'tiger', 'Q22676']
+    correct_answer = 'tiger'
+    assert get_answer(types, answers) == correct_answer
 
 def test21():
     """Second test for animal type with car as possible answer."""
@@ -168,11 +168,11 @@ def test22():
     assert get_answer(types, answers) == correct_answer
 
 def test23():
-   """Normal test for type: mammal."""
-   types = ['mammal']
-   answers = ['car', 'tiger', 'toy']
-   correct_answer = 'tiger'
-   assert get_answer(types, answers) == correct_answer
+    """Normal test for type: mammal."""
+    types = ['mammal']
+    answers = ['car', 'tiger', 'toy']
+    correct_answer = 'tiger'
+    assert get_answer(types, answers) == correct_answer
 
 def test24():
     """Normal test searching human / country of citizenship"""
