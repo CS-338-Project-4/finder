@@ -1,4 +1,4 @@
-import logo from './logo-27.png';
+
 import { useState } from 'react';
 import "./index.css";
 import Title from './Title';
