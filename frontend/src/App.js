@@ -1,9 +1,9 @@
-import logo from './logo.svg';
-//import './App.css';
+import logo from './logo-27.png';
 import { useState } from 'react';
 import "./index.css";
 import Title from './Title';
 import Autocomplete from './Autocomplete';
+
 
 function App() {
 
@@ -72,6 +72,9 @@ function App() {
 
   return (
     <div className="form-container">
+      <link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet"/>
       <Title />
 
       <h2>Answer Type</h2>
