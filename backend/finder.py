@@ -56,7 +56,7 @@ def human_search(types: list[str], answers: list[str])-> str:
             print(answer)
             claims = utils.get_claims(answer)
             print(claims.get('P1417'))
-            
+
             if claims.get('P1417') is not None:
                 scores[i] += 1
     elif type_ids[0] in animal_types:
@@ -147,7 +147,7 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     scores = [0] * len(answers)
     type_ids = utils.get_ids(types)
     answer_ids = utils.get_ids(answers)
-    
+
     def get_results(endpoint_url, query):
         user_agent = 'Finder/0.0 <darrylforbes2022@u.northwestern.edu>'
         sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
@@ -167,6 +167,7 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                 '} group by ?relationP order by desc(?count)'
             )
             results = get_results(endpoint_url, relation_query)['results']['bindings']
+            print(results)
             if results:
                 label_id = results[0]['relationP']['value'].split('/')[-1]
                 claims = utils.get_claims(answer_id)
@@ -187,17 +188,17 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                         scores[i] -= round(1/len(entity_ids), 2)
 
             tree_query = (
-                'SELECT ?item'
-                'WHERE {'
-                f'wd:{answer_id} (p:P31?|p:P279) ?st .'
-                '?st (ps:P31?|ps:P279) ?item .'
-                f'?item wdt:P31?/wdt:P279* wd:{type_id} .'
-                '}'
+                'SELECT ?item '
+                'WHERE { '
+                f'wd:{answer_id} (p:P31?|p:P279|p:P21|p:P106|p:P361) ?st . '
+                '?st (ps:P31?|ps:P279|ps:P21|ps:P106|ps:P361) ?item . '
+                f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
+                '} group by ?item'
             )
 
             results = get_results(endpoint_url, tree_query)['results']['bindings']
             scores[i] += len(results)
-    
+
     claims = utils.get_claims(type_ids)
     animal_types = ['Q7377', 'Q152', 'Q5113', 'Q10908', 'Q1390', 'Q10811']
     animal_names = ['mammal', 'insect', 'fish', 'bird', 'amphibian', 'reptile']
@@ -209,7 +210,7 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
             print(answer)
             claims = utils.get_claims(answer)
             print(claims.get('P1417'))
-            
+
             if claims.get('P1417') is not None:
                 scores[i] += 1
     elif type_ids[0] in animal_types:
