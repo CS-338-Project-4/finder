@@ -176,7 +176,7 @@ def test23():
 
 def test24():
     """Normal test searching human / country of citizenship"""
-    types = ['human', 'Q145']
+    types = ['human', 'Q30']
     answers = ['Q9673', 'Q8877', 'Q1426', 'Q8991894']
     correct_answer = 'Q8877'
     assert get_answer(types, answers) == correct_answer
