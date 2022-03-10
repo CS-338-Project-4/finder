@@ -84,6 +84,13 @@ function App() {
             input={x}
             setInput={val => handleInputChange(val, i, typeList, setTypeList)}
           />
+
+          {typeList.length !== 1 && <button
+          className="button submit"
+          onClick={() => handleRemoveClick(i, typeList, setTypeList)}>Remove</button>}
+          {typeList.length - 1 === i && <button onClick={() => handleAddClick(typeList, setTypeList)}>Add</button>}
+            
+
         </div>
       ))}
 
