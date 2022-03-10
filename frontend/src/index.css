@@ -1,14 +1,20 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+/* @import url(https://fonts.googleapis.com/css?family=Roboto:300); */
 
 body {
-  background: #76b852;
+  background: #A7C7E7;
   display: flex;
   min-height: 100vh;
   justify-content: center;
   align-items: center;
 }
 
+h1 { color: #5085bb; font-family: "Great Vibes", cursive; font-size: 80px; line-height: 160px; font-weight: bold; margin-bottom: 0px; margin-top: 40px; text-align: center; text-shadow: 0 1px 1px #fff; }
+h2 { color: #5085bb; font-family: 'Lato', sans-serif; font-weight: bold; }
 .form-container {
+  display: column;
+  border-radius: 12px;
+  align-items: center;
+  justify-content: center;
   width: 360px;
   background-color: white;
   margin: auto;
@@ -17,6 +23,8 @@ body {
 }
 
 .register-form {
+  align-items: center;
+  justify-content: center;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -24,24 +32,27 @@ body {
 }
 
 .success-message {
-  font-family: "Roboto", sans-serif;
   background-color: #3f89f8;
   padding: 15px;
   color: white;
 }
 
 .form-field {
+  align-items: center;
+  justify-content: center;
   margin: 10px 0 10px 0;
   padding: 15px;
   font-size: 16px;
   border: 0;
-  font-family: "Roboto", sans-serif;
+  /* font-family: "Roboto", sans-serif; */
 }
 
 span {
-  font-family: "Roboto", sans-serif;
+  align-items: center;
+  justify-content: center;
+  /* font-family: "Roboto", sans-serif; */
   font-size: 14px;
-  color: red;
+  color: rgb(1, 52, 94);
   margin-bottom: 15px;
 }
 
@@ -55,9 +66,13 @@ input {
 }
 
 button {
-  background: #4caf50;
-  color: white;
+  background: #5085bb;
+  border: none;
+  color: rgb(255, 255, 255);
   cursor: pointer;
+  border-radius: 12px;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 
 button:disabled {

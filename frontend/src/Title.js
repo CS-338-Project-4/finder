@@ -1,15 +1,20 @@
 import React from 'react'
+import logo from './logo3.png';
 
 function Title() {
   return (
+   
+   
     <div
+    
     style={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center"
       }}>
 
-      <h1>Finder</h1>
+      <img src={logo} /> 
+      <h1>Scorer</h1>
     </div>
   )
 }
