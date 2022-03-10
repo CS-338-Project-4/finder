@@ -84,6 +84,13 @@ function App() {
             input={x}
             setInput={val => handleInputChange(val, i, typeList, setTypeList)}
           />
+
+          {typeList.length !== 1 && <button
+          className="button submit"
+          onClick={() => handleRemoveClick(i, typeList, setTypeList)}>Remove</button>}
+          {typeList.length - 1 === i && <button onClick={() => handleAddClick(typeList, setTypeList)}>Add</button>}
+            
+
         </div>
       ))}
 
@@ -109,9 +116,13 @@ function App() {
      { scoresList.length > 0 ? <div>
         <h2>Accuracy Scores</h2>
             {console.log(scoresList.length)}
+            <p>
             <ul>
               {scoresList.map((s, i) => <li key={i} >{answerList[i]}: {s}</li>)}
             </ul>
+
+            </p>
+            
       </div> : null}
       
       

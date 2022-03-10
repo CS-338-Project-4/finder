@@ -8,6 +8,8 @@ body {
   align-items: center;
 }
 
+p {font-family: 'georgia'; color: #2b6bac}
+
 h1 { color: #5085bb; font-family: "Great Vibes", cursive; font-size: 80px; line-height: 160px; font-weight: bold; margin-bottom: 0px; margin-top: 40px; text-align: center; text-shadow: 0 1px 1px #fff; }
 h2 { color: #5085bb; font-family: 'Lato', sans-serif; font-weight: bold; }
 .form-container {
