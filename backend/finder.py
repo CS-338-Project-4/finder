@@ -210,7 +210,7 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
             claims = utils.get_claims(answer)
             print(claims.get('P1417'))
             
-            if claims.get('P1417') is not None:
+            if claims.get('P1417')[0]['mainsnak']['datavalue']['value'].split('/')[0] == 'animal':
                 scores[i] += 1
     elif type_ids[0] in animal_types:
         for i, answer in enumerate(answers): #for each answer in the list
