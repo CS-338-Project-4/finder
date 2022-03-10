@@ -143,6 +143,10 @@ def get_claim_ids(entities: dict) -> list['str']:
 
 def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     endpoint_url = "https://query.wikidata.org/sparql"
+    relations_searched = (17, 19, 21, 27, 30, 31, 39, 101, 106, 108, 279, 361,
+                          413, 463, 641, 735, 1412, 1552, 1830)
+    p_relations = '|'.join((f'p:P{num}' for num in relations_searched))
+    ps_relations = '|'.join((f'ps:P{num}' for num in relations_searched))
 
     scores = [0] * len(answers)
     type_ids = utils.get_ids(types)
@@ -157,44 +161,40 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
 
     for i, answer_id in enumerate(answer_ids):
         for type_id in type_ids:
-            print(answer_id)
-            relation_query = (
-                'SELECT ?item ?relationP '
-                'WHERE { '
-                f'wd:{answer_id} (p:P31?|p:P279|p:P21|p:P27|p:P106|p:P361|p:P1412) ?st . '
-                f'wd:{answer_id} ?relationP ?st . '
-                '?st ?relationPS ?item . '
-                '?st (ps:P31?|ps:P279|ps:P21|ps:P27|ps:P106|ps:P361|ps:P1412) ?item . '
-                f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
-                'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) . '
-                '} group by ?item ?relationP '
-            )
+            if answer_id == type_id:
+                scores[i] += 1
+                continue
+            try:
+                with utils.timeout(30):
+                    relation_query = (
+                        'SELECT ?item ?relationP '
+                        'WHERE { '
+                        f'wd:{answer_id} ({p_relations})? ?st . '
+                        f'wd:{answer_id} ?relationP ?st . '
+                        '?st ?relationPS ?item . '
+                        f'?st ({ps_relations})? ?item . '
+                        f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
+                        'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) . '
+                        '} group by ?item ?relationP '
+                        'LIMIT 1000'
+                    )
 
-            results = get_results(endpoint_url, relation_query)['results']['bindings']
-            if results:
-                label_id = results[0]['relationP']['value'].split('/')[-1]
-                items = {r['item']['value'].split('/')[-1] for r in results}
-                claims = utils.get_claims(answer_id)
-                if claims.get(label_id):  # See if the type is in the dictionary
-                    entity_ids = get_claim_ids(claims[label_id])  # Get the qNumbers for the entities in type
-                    scores[i] += 1
-                    for entity in entity_ids:
-                        if entity in items:
-                            scores[i] += 0
-                            break
-                        scores[i] -= round(1/len(entity_ids), 2)
+                    results = get_results(endpoint_url, relation_query)['results']['bindings']
+                    if results:
+                        label_id = results[0]['relationP']['value'].split('/')[-1]
+                        items = {r['item']['value'].split('/')[-1] for r in results}
+                        claims = utils.get_claims(answer_id)
+                        if claims.get(label_id):  # See if the type is in the dictionary
+                            entity_ids = get_claim_ids(claims[label_id])  # Get the qNumbers for the entities in type
+                            scores[i] += 1
+                            for entity in entity_ids:
+                                if entity in items:
+                                    scores[i] += 0
+                                    break
+                                scores[i] -= round(1/len(entity_ids), 2)
+            except TimeoutError:
+                print(f'Query timed out - {answer_id}, {type_id}')
 
-            # tree_query = (
-            #     'SELECT ?item '
-            #     'WHERE { '
-            #     f'wd:{answer_id} (p:P31?|p:P279|p:P21|p:P106|p:P361) ?st . '
-            #     '?st (ps:P31?|ps:P279|ps:P21|ps:P106|ps:P361) ?item . '
-            #     f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
-            #     '} group by ?item'
-            # )
-
-            # results = get_results(endpoint_url, tree_query)['results']['bindings']
-            # scores[i] += len(results)
 
     claims = utils.get_claims(type_ids)
     animal_types = ['Q7377', 'Q152', 'Q5113', 'Q10908', 'Q1390', 'Q10811']
@@ -214,5 +214,4 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
             for j in strings:
                 if j == types:
                     scores[i] += 1
-    print(scores)
     return scores
