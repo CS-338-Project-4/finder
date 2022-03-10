@@ -204,8 +204,9 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     if type_ids[0] == 'Q729':
         for i, answer in enumerate(answers): #for each answer in the list
             claims = utils.get_claims(answer)
-            if claims.get('P1417')[0]['mainsnak']['datavalue']['value'].split('/')[0] == 'animal':
-                scores[i] += 1
+            if claims.get('P1417'):
+                if claims.get('P1417')[0]['mainsnak']['datavalue']['value'].split('/')[0] == 'animal':
+                    scores[i] += 1
     elif type_ids[0] in animal_types:
         for i, answer in enumerate(answers): #for each answer in the list
             claims = utils.get_entity(answer)
