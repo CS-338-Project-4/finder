@@ -116,9 +116,13 @@ function App() {
      { scoresList.length > 0 ? <div>
         <h2>Accuracy Scores</h2>
             {console.log(scoresList.length)}
+            <p>
             <ul>
               {scoresList.map((s, i) => <li key={i} >{answerList[i]}: {s}</li>)}
             </ul>
+
+            </p>
+            
       </div> : null}
       
       
