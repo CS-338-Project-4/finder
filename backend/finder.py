@@ -165,34 +165,35 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                 scores[i] += 1
                 continue
             try:
-                with utils.timeout(30):
-                    relation_query = (
-                        'SELECT ?item ?relationP '
-                        'WHERE { '
-                        f'wd:{answer_id} ({p_relations})? ?st . '
-                        f'wd:{answer_id} ?relationP ?st . '
-                        '?st ?relationPS ?item . '
-                        f'?st ({ps_relations})? ?item . '
-                        f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
-                        'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) . '
-                        '} group by ?item ?relationP '
-                        'LIMIT 1000'
-                    )
+                # with utils.timeout(30):
+                relation_query = (
+                    'SELECT ?item ?relationP '
+                    'WHERE { '
+                    f'wd:{answer_id} ({p_relations})? ?st . '
+                    f'wd:{answer_id} ?relationP ?st . '
+                    '?st ?relationPS ?item . '
+                    f'?st ({ps_relations})? ?item . '
+                    f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
+                    'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) . '
+                    '} group by ?item ?relationP '
+                    'LIMIT 1000'
+                )
 
-                    results = get_results(endpoint_url, relation_query)['results']['bindings']
-                    if results:
-                        label_id = results[0]['relationP']['value'].split('/')[-1]
-                        items = {r['item']['value'].split('/')[-1] for r in results}
-                        claims = utils.get_claims(answer_id)
-                        if claims.get(label_id):  # See if the type is in the dictionary
-                            entity_ids = get_claim_ids(claims[label_id])  # Get the qNumbers for the entities in type
-                            scores[i] += 1
-                            for entity in entity_ids:
-                                if entity in items:
-                                    scores[i] += 0
-                                    break
-                                scores[i] -= round(1/len(entity_ids), 2)
-            except TimeoutError:
+                results = get_results(endpoint_url, relation_query)['results']['bindings']
+                if results:
+                    label_id = results[0]['relationP']['value'].split('/')[-1]
+                    items = {r['item']['value'].split('/')[-1] for r in results}
+                    claims = utils.get_claims(answer_id)
+                    if claims.get(label_id):  # See if the type is in the dictionary
+                        entity_ids = get_claim_ids(claims[label_id])  # Get the qNumbers for the entities in type
+                        scores[i] += 1
+                        for entity in entity_ids:
+                            if entity in items:
+                                scores[i] += 0
+                                break
+                            scores[i] -= round(1/len(entity_ids), 2)
+            # except TimeoutError:
+            except:
                 print(f'Query timed out - {answer_id}, {type_id}')
 
 
