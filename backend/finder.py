@@ -169,10 +169,10 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                 relation_query = (
                     'SELECT ?item ?relationP '
                     'WHERE { '
-                    f'wd:{answer_id} ({p_relations})? ?st . '
+                    # f'wd:{answer_id} ({p_relations})? ?st . '  # Narrows down relations
                     f'wd:{answer_id} ?relationP ?st . '
                     '?st ?relationPS ?item . '
-                    f'?st ({ps_relations})? ?item . '
+                    # f'?st ({ps_relations})? ?item . '  # Narrows down relations
                     f'?item wdt:P31?/wdt:P279?/wdt:P279? wd:{type_id} . '
                     'FILTER( STRSTARTS( STR(?relationPS), "http://www.wikidata.org/prop/statement/" ) ) . '
                     '} group by ?item ?relationP '
