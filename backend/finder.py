@@ -143,8 +143,13 @@ def get_claim_ids(entities: dict) -> list['str']:
 
 def get_sparql(types: list[str], answers: list[str]) -> list[int]:
     endpoint_url = "https://query.wikidata.org/sparql"
-    relations_searched = (17, 19, 21, 27, 30, 31, 39, 101, 106, 108, 279, 361,
-                          413, 463, 641, 735, 1412, 1552, 1830)
+    relations_searched = (6, 17, 19, 21, 27, 30, 31, 35, 39, 50, 53, 54, 57,
+                          58, 61, 69, 84, 86, 88, 91, 97, 98, 101, 102, 103,
+                          106, 108, 110, 112, 115, 118, 123, 127, 131, 136,
+                          137, 159, 161, 162, 169, 175, 176, 177, 178, 179,
+                          206, 241, 276, 279, 287, 361, 413, 425, 452, 462,
+                          463, 488, 495, 527, 611, 634, 641, 674, 706, 734,
+                          735, 1412, 1552, 1830)
     p_relations = '|'.join((f'p:P{num}' for num in relations_searched))
     ps_relations = '|'.join((f'ps:P{num}' for num in relations_searched))
 
