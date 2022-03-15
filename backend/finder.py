@@ -170,7 +170,6 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                 scores[i] += 1
                 continue
             try:
-                # with utils.timeout(30):
                 relation_query = (
                     'SELECT ?item ?relationP '
                     'WHERE { '
@@ -197,7 +196,6 @@ def get_sparql(types: list[str], answers: list[str]) -> list[int]:
                                 scores[i] += 0
                                 break
                             scores[i] -= round(1/len(entity_ids), 2)
-            # except TimeoutError:
             except:
                 print(f'Query timed out - {answer_id}, {type_id}')
 
