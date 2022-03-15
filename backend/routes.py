@@ -33,11 +33,6 @@ def get_page(search_str: str):
     return RedirectResponse(utils.get_entity(search_str)['url'])
 
 
-@router.get('/get-scores')
-def get_scores(types: list[str] = Query([]), answers: list[str] = Query([])):
-    return finder.get_scores(types, answers)
-
-
 @router.get('/get-answer')
 def get_answer(types: list[str] = Query([]), answers: list[str] = Query([])):
     return finder.get_answer(types, answers)
