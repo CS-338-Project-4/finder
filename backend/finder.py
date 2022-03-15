@@ -1,6 +1,4 @@
 import utils
-import sys
-from itertools import product
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 
