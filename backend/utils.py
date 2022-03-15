@@ -1,3 +1,5 @@
+import signal
+from contextlib import contextmanager
 from typing import Optional
 import requests
 
@@ -49,3 +51,15 @@ def get_labels(items: list[str]) -> list[str]:
                                              'format': 'json'})
     return [e['labels']['en']['value']
             for e in response.json()['entities'].values()]
+
+
+@contextmanager
+def timeout(seconds):
+    def signal_handler(signum, frame):
+        raise TimeoutError("Timed out!")
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
